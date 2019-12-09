@@ -1,4 +1,4 @@
-FROM python:3.7-slim-stretch
+FROM debian:9.9-slim
 
 # Install newest R version
 RUN apt-get update && \
@@ -12,13 +12,14 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install python and pip deps
-RUN apt-get update && apt-get install --no-install-recommends --yes build-essential python3-dev libxml2 libxml2-dev zlib1g-dev && \
-    pip3 --no-cache-dir install --upgrade pip && \
-    pip3 --no-cache-dir install --upgrade setuptools && \
-    pip3 --no-cache-dir install pandas rpy2 scikit-learn statsmodels tensorflow Cell-BLAST==0.2.14 && \
+COPY run_HieRFIT.R \
+     install_packages.R \
+     /Scripts/
+
+RUN apt-get update && \
+    apt-get install --no-install-recommends --yes make gcc g++ r-base-dev libcurl4-openssl-dev libssl-dev libxml2-dev libxml2 && \
+    Rscript --vanilla /Scripts/install_packages.R && \
+    apt-get purge --yes make gcc g++ r-base-dev libcurl4-openssl-dev libssl-dev libxml2-dev && \
     apt-get autoremove --yes && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-COPY Scripts/run_Cell_BLAST.py /Scripts/

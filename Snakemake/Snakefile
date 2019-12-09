@@ -229,6 +229,33 @@ rule SingleR:
     "{params.n_features} "
     "&> {log}"
 
+rule HieRFIT:
+  input:
+    datafile = config["datafile"],
+    labfile = config["labfile"],
+    folds = "{output_dir}/CV_folds.RData",
+    ranking = feature_ranking,
+    treefile = config["treefile"]
+  output:
+    pred = "{output_dir}/HieRFIT/HieRFIT_pred.csv",
+    true = "{output_dir}/HieRFIT/HieRFIT_true.csv",
+    test_time = "{output_dir}/HieRFIT/HieRFIT_test_time.csv",
+    training_time = "{output_dir}/HieRFIT/HieRFIT_training_time.csv"
+  log: "{output_dir}/HieRFIT/HieRFIT.log"
+  params:
+    n_features = config.get("number_of_features", 0)
+  singularity: "docker://yasinkaymaz/hierfit:{}".format(dockerTag)
+  shell:
+    "Rscript Scripts/run_HieRFIT.R "
+    "{input.datafile} "
+    "{input.labfile} "
+    "{input.folds} "
+    "{wildcards.output_dir}/HieRFIT "
+    "{input.ranking} "
+    "{params.n_features} "
+    "{input.treefile}"
+    "&> {log}"
+
 #NOTE non-conformant to the rest of the rules.
 rule Garnett_CV:
   input:
