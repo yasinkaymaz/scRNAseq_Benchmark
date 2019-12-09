@@ -46,7 +46,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
       treetable <- read.delim(TreeTable, header=F)
          HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
-                              TreeTable = treetable)
+                              TreeTable = treetable, thread = 4)
       end_traintime <- Sys.time()
          SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
       #Projection with HieRFIT
@@ -62,7 +62,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
       treetable <- read.delim(TreeTable, header=F)
          HieRMod <- CreateHieR(RefData = Data[, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
-                              TreeTable = treetable)
+                              TreeTable = treetable, thread = 4)
       end_traintime <- Sys.time()
          SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
       #Projection with HieRFIT
