@@ -47,7 +47,7 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
   Data = t(as.matrix(Data))
 
     for (i in c(1:n_folds)){
-      celltype.predictions <- NULL
+      celltype.predictions <- rep("NA", times=length(list(Labels[Test_Idx[[i]]])[[1]]))
 
       if(!is.null(GeneOrderPath) & !is.null (NumGenes)){
 

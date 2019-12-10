@@ -266,8 +266,7 @@ rule Seurat:
   output:
     pred = "{output_dir}/Seurat/Seurat_pred.csv",
     true = "{output_dir}/Seurat/Seurat_true.csv",
-    test_time = "{output_dir}/Seurat/Seurat_test_time.csv",
-    training_time = "{output_dir}/Seurat/Seurat_training_time.csv"
+    total_time = "{output_dir}/Seurat/Seurat_total_time.csv"
   log: "{output_dir}/Seurat/Seurat.log"
   params:
     n_features = config.get("number_of_features", 0)
