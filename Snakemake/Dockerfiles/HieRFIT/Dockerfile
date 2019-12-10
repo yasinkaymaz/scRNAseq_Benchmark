@@ -23,3 +23,5 @@ RUN apt-get update && \
     apt-get autoremove --yes && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+RUN R -e "devtools::install_github('yasinkaymaz/HieRFIT')"

@@ -244,7 +244,7 @@ rule HieRFIT:
   log: "{output_dir}/HieRFIT/HieRFIT.log"
   params:
     n_features = config.get("number_of_features", 0)
-  singularity: "docker://yasinkaymaz/hierfit:{}".format("d0.01")
+  singularity: "docker://yasinkaymaz/hierfit:{}".format("d0.02")
   shell:
     "Rscript Scripts/run_HieRFIT.R "
     "{input.datafile} "
