@@ -256,6 +256,32 @@ rule HieRFIT:
     "{input.treefile}"
     "&> {log}"
 
+rule Seurat:
+  input:
+    datafile = config["datafile"],
+    labfile = config["labfile"],
+    folds = "{output_dir}/CV_folds.RData",
+    ranking = feature_ranking,
+    treefile = config["treefile"]
+  output:
+    pred = "{output_dir}/Seurat/Seurat_pred.csv",
+    true = "{output_dir}/Seurat/Seurat_true.csv",
+    test_time = "{output_dir}/Seurat/Seurat_test_time.csv",
+    training_time = "{output_dir}/Seurat/Seurat_training_time.csv"
+  log: "{output_dir}/Seurat/Seurat.log"
+  params:
+    n_features = config.get("number_of_features", 0)
+  singularity: "docker://reetututeja/seurat:{}".format("3.1")
+  shell:
+    "Rscript Scripts/run_Seurat.R "
+    "{input.datafile} "
+    "{input.labfile} "
+    "{input.folds} "
+    "{wildcards.output_dir}/Seurat "
+    "{input.ranking} "
+    "{params.n_features} "
+    "&> {log}"
+
 #NOTE non-conformant to the rest of the rules.
 rule Garnett_CV:
   input:
