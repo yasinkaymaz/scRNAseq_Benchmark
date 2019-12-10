@@ -43,11 +43,11 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
   library(Seurat)
   True_Labels_Seurat <- list()
   Pred_Labels_Seurat <- list()
-  Train_Time_Seurat <- list()
-  Test_Time_Seurat <- list()
+  Total_Time_Seurat <- list()
   Data = t(as.matrix(Data))
 
     for (i in c(1:n_folds)){
+      celltype.predictions <- NULL
 
       if(!is.null(GeneOrderPath) & !is.null (NumGenes)){
 
@@ -65,7 +65,6 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
         refSeu <- FindVariableFeatures(refSeu, selection.method = "vst", nfeatures = 2000)
 
         celltype.predictions <- SeuratAnchorPredict(ref=refSeu, query = queSeu)
-        PriorPosttable <- data.frame(Prior=queSeu@meta.data$CellType, Post=celltype.predictions$predicted.id)
 
         end_time <- Sys.time()
       }
@@ -83,15 +82,14 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
         refSeu <- UpdateSeuratObject(object = refSeu)
         refSeu <- FindVariableFeatures(refSeu, selection.method = "vst", nfeatures = 2000)
 
-        celltype.predictions <- SeuratAnchorPredict(ref=refSeu, query = queSeu)
-        PriorPosttable <- data.frame(Prior=queSeu@meta.data$CellType, Post=celltype.predictions$predicted.id)
+        tryCatch(celltype.predictions <- SeuratAnchorPredict(ref=refSeu, query = queSeu), error = function(e){print("Finding anchors fails ..."); NaN})
 
         end_time <- Sys.time()
       }
       Total_Time_Seurat[i] <- as.numeric(difftime(end_time,start_time,units = 'secs'))
 
       True_Labels_Seurat[i] <- list(Labels[Test_Idx[[i]]])
-      Pred_Labels_Seurat[i] <- list(as.vector(Seurat$labels))
+      Pred_Labels_Seurat[i] <- list(as.vector(celltype.predictions$predicted.id))
     }
     True_Labels_Seurat <- as.vector(unlist(True_Labels_Seurat))
     Pred_Labels_Seurat <- as.vector(unlist(Pred_Labels_Seurat))
