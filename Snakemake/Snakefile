@@ -271,7 +271,7 @@ rule Seurat:
   log: "{output_dir}/Seurat/Seurat.log"
   params:
     n_features = config.get("number_of_features", 0)
-  singularity: "docker://reetututeja/seurat:{}".format("3.1")
+  conda: "R3.6.yml"
   shell:
     "Rscript Scripts/run_Seurat.R "
     "{input.datafile} "
