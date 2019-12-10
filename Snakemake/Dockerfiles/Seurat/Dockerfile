@@ -1,8 +1,8 @@
 ## see https://github.com/openanalytics/r-base/blob/master/Dockerfile
-FROM r-base:3.5.1
+FROM r-base:3.6.1
 
 # devtools needs this
-RUN apt update -y && apt upgrade -y && apt-get install -y --fix-missing \
+RUN apt update -y && apt-get install -y --fix-missing \
 software-properties-common \
 build-essential gcc \
 build-essential
