@@ -234,8 +234,7 @@ rule HieRFIT:
     datafile = config["datafile"],
     labfile = config["labfile"],
     folds = "{output_dir}/CV_folds.RData",
-    ranking = feature_ranking,
-    treefile = config["treefile"]
+    ranking = feature_ranking
   output:
     pred = "{output_dir}/HieRFIT/HieRFIT_pred.csv",
     true = "{output_dir}/HieRFIT/HieRFIT_true.csv",
@@ -243,7 +242,8 @@ rule HieRFIT:
     training_time = "{output_dir}/HieRFIT/HieRFIT_training_time.csv"
   log: "{output_dir}/HieRFIT/HieRFIT.log"
   params:
-    n_features = config.get("number_of_features", 0)
+    n_features = config.get("number_of_features", 0),
+    treefile = config["treefile"]
   singularity: "docker://yasinkaymaz/hierfit:{}".format("d0.02")
   shell:
     "Rscript Scripts/run_HieRFIT.R "
@@ -253,7 +253,7 @@ rule HieRFIT:
     "{wildcards.output_dir}/HieRFIT "
     "{input.ranking} "
     "{params.n_features} "
-    "{input.treefile}"
+    "{params.treefile}"
     "&> {log}"
 
 rule Seurat:
