@@ -39,17 +39,24 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
   Test_Time_HieRFIT <- list()
   Data = t(as.matrix(Data))
 
-
+  if(!file.exists(TreeTable)){
+    treetable <- NULL
+    print("User tree is not found! Creating a tree from data...")
+  }else{
+    treetable <- TreeTable
+  }
+  
   for (i in c(1:n_folds)){
 
-    threadN <- CreateDeNovoTree(Data, Labels[Train_Idx[[i]]])$Nnode
 
     if(!is.null(GeneOrderPath) & !is.null (NumGenes)){
       start_traintime <- Sys.time()
       #Here Create HierMod:
+      threadN <- CreateDeNovoTree(Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]], Labels[Train_Idx[[i]]])$Nnode
+
          HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
-                              TreeTable = TreeTable, thread = threadN)
+                              TreeTable = treetable, thread = threadN)
       end_traintime <- Sys.time()
          SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
       #Projection with HieRFIT
@@ -62,9 +69,11 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
     else{
       start_traintime <- Sys.time()
       #Here Create HierMod:
+      threadN <- CreateDeNovoTree(Data[, Train_Idx[[i]]], Labels[Train_Idx[[i]]])$Nnode
+
          HieRMod <- CreateHieR(RefData = Data[, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
-                              TreeTable = TreeTable, thread = threadN)
+                              TreeTable = treetable, thread = threadN)
       end_traintime <- Sys.time()
          SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
       #Projection with HieRFIT
