@@ -41,7 +41,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
 
 
   for (i in c(1:n_folds)){
-      
+
     threadN <- CreateDeNovoTree(Data, Labels[Train_Idx[[i]]])$Nnode
 
     if(!is.null(GeneOrderPath) & !is.null (NumGenes)){
@@ -49,7 +49,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
       #Here Create HierMod:
          HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
-                              TreeTable = treetable, thread = threadN)
+                              TreeTable = TreeTable, thread = threadN)
       end_traintime <- Sys.time()
          SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
       #Projection with HieRFIT
