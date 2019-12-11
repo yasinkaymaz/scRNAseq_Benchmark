@@ -39,9 +39,11 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
   Test_Time_HieRFIT <- list()
   Data = t(as.matrix(Data))
 
-  threadN <- CreateDeNovoTree(Data, Labels[Train_Idx[[i]]])$Nnode
 
   for (i in c(1:n_folds)){
+      
+    threadN <- CreateDeNovoTree(Data, Labels[Train_Idx[[i]]])$Nnode
+
     if(!is.null(GeneOrderPath) & !is.null (NumGenes)){
       start_traintime <- Sys.time()
       #Here Create HierMod:
