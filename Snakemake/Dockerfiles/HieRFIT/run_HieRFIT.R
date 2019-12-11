@@ -1,6 +1,6 @@
 args <- commandArgs(TRUE)
 
-run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = NULL, NumGenes = NULL, TreeTable){
+run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = NULL, NumGenes = NULL, TreeTable = NULL){
   "
   run HieRFIT
   Wrapper script to run run_HieRFIT on a benchmark dataset with 5-fold cross validation,
@@ -39,9 +39,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
   Test_Time_HieRFIT <- list()
   Data = t(as.matrix(Data))
 
-  treetable <- read.delim(TreeTable, header=F)
-
-  threadN <- CreateTree(treeTable=treetable)$Nnode
+  threadN <- CreateDeNovoTree(Data, Labels[Train_Idx[[i]]])$Nnode
 
   for (i in c(1:n_folds)){
     if(!is.null(GeneOrderPath) & !is.null (NumGenes)){

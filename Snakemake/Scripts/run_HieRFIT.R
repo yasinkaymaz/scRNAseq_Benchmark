@@ -39,9 +39,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
   Test_Time_HieRFIT <- list()
   Data = t(as.matrix(Data))
 
-  treetable <- read.delim(TreeTable, header=F)
-
-  threadN <- CreateTree(treeTable=treetable)$Nnode
+  threadN <- CreateDeNovoTree(Data, Labels[Train_Idx[[i]]])$Nnode
 
   for (i in c(1:n_folds)){
     if(!is.null(GeneOrderPath) & !is.null (NumGenes)){
