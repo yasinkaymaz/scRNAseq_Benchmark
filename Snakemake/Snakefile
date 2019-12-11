@@ -262,8 +262,7 @@ rule Seurat:
     datafile = config["datafile"],
     labfile = config["labfile"],
     folds = "{output_dir}/CV_folds.RData",
-    ranking = feature_ranking,
-    treefile = config["treefile"]
+    ranking = feature_ranking
   output:
     pred = "{output_dir}/Seurat/Seurat_pred.csv",
     true = "{output_dir}/Seurat/Seurat_true.csv",
