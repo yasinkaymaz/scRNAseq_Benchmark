@@ -96,19 +96,10 @@ run_scPred<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
   Testing_Time_scPred <- as.vector(unlist(Testing_Time_scPred))
 
   setwd(OutputDir)
-
-  if(!is.null(GeneOrderPath) & !is.null(NumGenes)){
-    write.csv(True_Labels_scPred,paste('scPred_',NumGenes,'_True_Labels.csv', sep = ''),row.names = FALSE)
-    write.csv(Pred_Labels_scPred,paste('scPred_',NumGenes,'_Pred_Labels.csv', sep = ''),row.names = FALSE)
-    write.csv(Training_Time_scPred,paste('scPred_',NumGenes,'_Training_Time.csv', sep = ''),row.names = FALSE)
-    write.csv(Testing_Time_scPred,paste('scPred_',NumGenes,'_Testing_Time.csv', sep = ''),row.names = FALSE)
-  }
-  else{
-    write.csv(True_Labels_scPred,'scPred_True_Labels.csv',row.names = FALSE)
-    write.csv(Pred_Labels_scPred,'scPred_Pred_Labels.csv',row.names = FALSE)
-    write.csv(Training_Time_scPred,'scPred_Training_Time.csv',row.names = FALSE)
-    write.csv(Testing_Time_scPred,'scPred_Testing_Time.csv',row.names = FALSE)
-  }
+    write.csv(True_Labels_scPred,'scPred_true.csv',row.names = FALSE)
+    write.csv(Pred_Labels_scPred,'scPred_pred.csv',row.names = FALSE)
+    write.csv(Training_Time_scPred,'scPred_training_time.csv',row.names = FALSE)
+    write.csv(Testing_Time_scPred,'scPred_test_time.csv',row.names = FALSE)
 }
 
 if (args[6] == "0") {
