@@ -1,3 +1,5 @@
+args <- commandArgs(TRUE)
+
 run_scPred<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = NULL,NumGenes = NULL){
   "
   run scPred
