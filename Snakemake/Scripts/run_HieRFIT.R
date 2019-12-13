@@ -43,9 +43,9 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
     treetable <- NULL
     print("User tree is not found! Creating a tree from data...")
   }else{
-    treetable <- TreeTable
+    treetable <- read.delim(TreeTable, header=F)
   }
-  
+
   for (i in c(1:n_folds)){
 
 
