@@ -281,6 +281,32 @@ rule Seurat:
     "{params.n_features} "
     "&> {log}"
 
+rule scPred:
+  input:
+    datafile = config["datafile"],
+    labfile = config["labfile"],
+    folds = "{output_dir}/CV_folds.RData",
+    ranking = feature_ranking
+  output:
+    pred = "{output_dir}/scPred/scPred_pred.csv",
+    true = "{output_dir}/scPred/scPred_true.csv",
+    test_time = "{output_dir}/scPred/scPred_test_time.csv",
+    training_time = "{output_dir}/scPred/scPred_training_time.csv"
+  log: "{output_dir}/scPred/scPred.log"
+  params:
+    n_features = config.get("number_of_features", 0)
+  conda: "R3.6.yml"
+  shell:
+    "Rscript Scripts/run_scPred.R "
+    "{input.datafile} "
+    "{input.labfile} "
+    "{input.folds} "
+    "{wildcards.output_dir}/scPred "
+    "{input.ranking} "
+    "{params.n_features} "
+    "&> {log}"
+
+
 #NOTE non-conformant to the rest of the rules.
 rule Garnett_CV:
   input:
