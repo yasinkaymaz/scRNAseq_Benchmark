@@ -306,6 +306,31 @@ rule scPred:
     "{params.n_features} "
     "&> {log}"
 
+rule CaSTLe:
+  input:
+    datafile = config["datafile"],
+    labfile = config["labfile"],
+    folds = "{output_dir}/CV_folds.RData",
+    ranking = feature_ranking
+  output:
+    pred = "{output_dir}/CaSTLe/CaSTLe_pred.csv",
+    true = "{output_dir}/CaSTLe/CaSTLe_true.csv",
+    test_time = "{output_dir}/CaSTLe/CaSTLe_test_time.csv",
+    training_time = "{output_dir}/CaSTLe/CaSTLe_training_time.csv"
+  log: "{output_dir}/CaSTLe/CaSTLe.log"
+  params:
+    n_features = config.get("number_of_features", 0)
+  conda: "R3.6.yml"
+  shell:
+    "Rscript Scripts/run_CaSTLe.R "
+    "{input.datafile} "
+    "{input.labfile} "
+    "{input.folds} "
+    "{wildcards.output_dir}/CaSTLe "
+    "{input.ranking} "
+    "{params.n_features} "
+    "&> {log}"
+
 
 #NOTE non-conformant to the rest of the rules.
 rule Garnett_CV:
