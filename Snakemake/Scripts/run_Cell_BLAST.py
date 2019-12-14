@@ -1,5 +1,5 @@
 import os
-from sys import argv
+from sys
 from pathlib import Path
 import time as tm
 import pandas as pd
