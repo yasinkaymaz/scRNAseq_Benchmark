@@ -5,7 +5,8 @@ Created on Thu May 23 13:51:15 2019
 @author: Lieke
 """
 
-import os 
+import os
+import sys
 import numpy as np
 import pandas as pd
 import time as tm
@@ -23,130 +24,130 @@ def run_LAmbDA(DataPath, LabelsPath, CV_RDataPath, OutputDir, GeneOrderPath = ""
     run LAmbDA classifier
     Wrapper script to run LAmbDA on a benchmark dataset with 5-fold cross validation,
     outputs lists of true and predicted cell labels as csv files, as well as computation time.
-  
+
     Parameters
     ----------
-    DataPath : Data file path (.csv), cells-genes matrix with cell unique barcodes 
+    DataPath : Data file path (.csv), cells-genes matrix with cell unique barcodes
     as row names and gene names as column names.
     LabelsPath : Cell population annotations file path (.csv).
     CV_RDataPath : Cross validation RData file path (.RData), obtained from Cross_Validation.R function.
     OutputDir : Output directory defining the path of the exported file.
-    GeneOrderPath : Gene order file path (.csv) obtained from feature selection, 
+    GeneOrderPath : Gene order file path (.csv) obtained from feature selection,
     defining the genes order for each cross validation fold, default is NULL.
     NumGenes : Number of genes used in case of feature selection (integer), default is 0.
     '''
-        
+
     # read the Rdata file
     robjects.r['load'](CV_RDataPath)
 
     nfolds = np.array(robjects.r['n_folds'], dtype = 'int')
     tokeep = np.array(robjects.r['Cells_to_Keep'], dtype = 'bool')
     col = np.array(robjects.r['col_Index'], dtype = 'int')
-    col = col - 1 
+    col = col - 1
     test_ind = np.array(robjects.r['Test_Idx'])
     train_ind = np.array(robjects.r['Train_Idx'])
 
     # read the data
     data = pd.read_csv(DataPath,index_col=0,sep=',')
     labels = pd.read_csv(LabelsPath, header=0,index_col=None, sep=',', usecols = col)
-    
+
     labels = labels.iloc[tokeep]
     data = data.iloc[tokeep]
-    
+
     # read the feature file
     if (NumGenes > 0):
         features = pd.read_csv(GeneOrderPath,header=0,index_col=None, sep=',')
-    
+
     # folder with results
     os.chdir(OutputDir)
-                
+
     tr_time=[]
     ts_time=[]
     truelab = np.zeros([len(labels),1],dtype = int)
     predlab = np.zeros([len(labels),1],dtype = int)
-        
+
     for i in range(np.squeeze(nfolds)):
         global X, Y, Gnp, Dnp, train, test, prt, cv
         test_ind_i = np.array(test_ind[i], dtype = 'int') - 1
         train_ind_i = np.array(train_ind[i], dtype = 'int') - 1
-                
-        X = np.array(data) 
+
+        X = np.array(data)
         if (NumGenes > 0):
             X = np.log2(X/10+1)
             feat_to_use = features.iloc[0:NumGenes,i]
             X = X[:,feat_to_use]
         else:
             X = np.log2(np.transpose(select_feats(np.transpose(X),0.5,80))/10+1)
-    
+
         uniq = np.unique(labels)
         Y = np.zeros([len(labels),len(uniq)],int)
-        
+
         for j in range(len(uniq)):
             Y[np.where(labels == uniq[j])[0],j] = 1
-    
+
         Y = np.array(Y)
-        
+
         Gnp = np.zeros([len(uniq),len(uniq)],int)
         np.fill_diagonal(Gnp,1)
         Gnp = np.array(Gnp)
-        
+
         Dnp = np.ones([len(uniq),1],int)
         Dnp = np.array(Dnp)
-        
+
         train_samp = int(np.floor(0.75*len(train_ind_i)))
         test_samp = len(train_ind_i) - train_samp
         perm = np.random.permutation(len(train_ind_i))
         train = perm[0:train_samp]
         test = perm[train_samp:test_samp+1]
-        
+
         while(np.sum(np.sum(Y[train,:],0)<5)>0):
             perm = np.random.permutation(X.shape[0])
             train = perm[0:train_samp+1]
             test = perm[train_samp+1:train_samp+test_samp+1]
-        
+
         cv = i
         optunity_it = 0
         prt = False
         opt_params = None
-                    
+
         start=tm.time()
         opt_params, _, _ = opt.minimize(run_LAmbDA2,solver_name='sobol', gamma=[0.8,1.2], delta=[0.05,0.95], tau=[10.0,11.0], prc_cut=[20,50], bs_prc=[0.2,0.6], num_trees=[10,200], max_nodes=[100,1000], num_evals=50)
         tr_time.append(tm.time()-start)
-        
+
         print("Finished training!")
-        
+
         prt = True
         train = train_ind_i
         test = test_ind_i
-        
+
         start=tm.time()
         err = run_LAmbDA2(opt_params['gamma'], opt_params['delta'], opt_params['tau'], opt_params['prc_cut'], opt_params['bs_prc'], opt_params['num_trees'], opt_params['max_nodes'])
         ts_time.append(tm.time()-start)
-        
+
         tf.reset_default_graph();
-        
+
         predfile = 'preds_cv' + str(cv) + '.mat'
         truefile = 'truth_cv' + str(cv) + '.mat'
         pred = sio.loadmat(predfile)
         truth = sio.loadmat(truefile)
-        
+
         pred = pred['preds']
         truth = truth['labels']
-        
+
         pred_ind = np.argmax(pred,axis=1)
         truth_ind = np.argmax(truth,axis=1)
-        
+
         predlab[test_ind_i,0] = pred_ind
         truelab[test_ind_i,0] = truth_ind
-            
-                
+
+
     truelab = pd.DataFrame(truelab)
     predlab = pd.DataFrame(predlab)
-        
+
     tr_time = pd.DataFrame(tr_time)
     ts_time = pd.DataFrame(ts_time)
-        
-    if (NumGenes == 0):  
+
+    if (NumGenes == 0):
         truelab.to_csv("LAmbDA_True_Labels.csv", index = False)
         predlab.to_csv("LAmbDA_Pred_Labels.csv", index = False)
         tr_time.to_csv("LAmbDA_Training_Time.csv", index = False)
@@ -157,6 +158,10 @@ def run_LAmbDA(DataPath, LabelsPath, CV_RDataPath, OutputDir, GeneOrderPath = ""
         tr_time.to_csv("LAmbDA_" + str(NumGenes) + "_Training_Time.csv", index = False)
         ts_time.to_csv("LAmbDA_" + str(NumGenes) + "_Testing_Time.csv", index = False)
 
+if argv[6] == "0":
+    run_LAmbDA(argv[1], argv[2], argv[3], argv[4])
+else:
+    run_LAmbDA(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6])
 
 ##### Functions copied from LAmbDA's Github
 def wt_cutoff(colnum,cutoff,Gtmp,gamma):
@@ -246,7 +251,7 @@ def run_LAmbDA2(gamma, delta, tau, prc_cut, bs_prc, num_trees, max_nodes):
 									num_features=input_feats,
 									num_trees=num_trees,
 									max_nodes=max_nodes).fill()
-	print("Tensor forest hparams created")								
+	print("Tensor forest hparams created")
 	forest_graph = tensor_forest.RandomForestGraphs(hparams)
 	print("Tensor forest graph created")
 	train_op = forest_graph.training_graph(xs, yin)
@@ -306,7 +311,7 @@ def run_LAmbDA2(gamma, delta, tau, prc_cut, bs_prc, num_trees, max_nodes):
 		blah = sess.run(predict, feed_dict=tensor_test);
 		sio.savemat('preds_cv' + str(cv) + '.mat', {'preds': blah});
 		sio.savemat('truth_cv' + str(cv) + '.mat', {'labels': Y[test, :]});
-	acc = sess.run(accuracy_op, feed_dict=tensor_test) 
+	acc = sess.run(accuracy_op, feed_dict=tensor_test)
 	print("loss1=%.4f, gamma=%.4f, delta=%.4f, tau=%.4f, prc_cut=%i, bs_prc=%.4f, num_trees=%i, max_nodes=%i" % (acc, gamma, delta, tau, prc_cut, bs_prc, num_trees, max_nodes))
 	tf.reset_default_graph();
 	return(acc)
