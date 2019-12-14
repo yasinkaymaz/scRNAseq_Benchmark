@@ -667,3 +667,27 @@ rule LAmbDA:
     "{input.ranking} "
     "{params.n_features} "
     "&> {log}"
+
+rule ACTINN:
+  input:
+    datafile = config["datafile"],
+    labfile = config["labfile"],
+    folds = "{output_dir}/CV_folds.RData",
+    ranking = feature_ranking
+  output:
+    pred = "{output_dir}/ACTINN/ACTINN_pred.csv",
+    true = "{output_dir}/ACTINN/ACTINN_true.csv",
+    total_time = "{output_dir}/ACTINN/ACTINN_total_time.csv"
+  log: "{output_dir}/ACTINN/ACTINN.log"
+  params:
+    n_features = config.get("number_of_features", 0)
+  singularity: "docker://yasinkaymaz/actinn:d0.01"
+  shell:
+    "python3 Scripts/run_ACTINN.py "
+    "{input.datafile} "
+    "{input.labfile} "
+    "{input.folds} "
+    "{wildcards.output_dir}/ACTINN "
+    "{input.ranking} "
+    "{params.n_features} "
+    "&> {log}"
