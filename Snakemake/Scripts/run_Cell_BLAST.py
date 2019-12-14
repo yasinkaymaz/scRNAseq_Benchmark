@@ -88,7 +88,7 @@ def run_Cell_BLAST(DataPath, LabelsPath, CV_RDataPath, OutputDir, GeneOrderPath 
             models.append(cb.directi.fit_DIRECTi(train, epoch=num_epoch, patience=10, random_seed = j, path="%d" % j))
 
         # train model
-        blast = cb.blast.BLAST(models, train).build_empirical()
+        blast = cb.blast.BLAST(models, train)
         tr_time.append(tm.time()-start)
 
         # predict labels
