@@ -34,7 +34,7 @@ rule evaluate:
   log: "{output_dir}/evaluation/{tool}.log"
   singularity: "docker://scrnaseqbenchmark/baseline:{}".format(dockerTag)
   shell:
-    "Rscript evaluate.R "
+    "Rscript Scripts/evaluate.R "
     "{input.true} "
     "{input.pred} "
     "{wildcards.output_dir}/evaluation "
@@ -53,7 +53,7 @@ rule generate_CV_folds:
     column = config.get("column", 1) # default to 1
   singularity: "docker://scrnaseqbenchmark/cross_validation:{}".format(dockerTag)
   shell:
-    "Rscript Cross_Validation.R "
+    "Rscript Scripts/Cross_Validation.R "
     "{input} "
     "{params.column} "
     "{wildcards.output_dir} "
@@ -72,7 +72,7 @@ rule generate_dropouts_feature_rankings:
     singularity: "docker://scrnaseqbenchmark/baseline:{}".format(dockerTag)
     shell:
         "echo test > {wildcards.output_dir}/test\n"
-        "python3 rank_gene_dropouts.py "
+        "python3 Scripts/rank_gene_dropouts.py "
         "{input.datafile} "
         "{input.folds} "
         "{wildcards.output_dir} "

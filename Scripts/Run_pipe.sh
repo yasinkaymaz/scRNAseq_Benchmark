@@ -12,7 +12,7 @@ cp ~/codes/scRNAseq_Benchmark/Snakemake/rank_gene_dropouts.py ./
 
 conda activate R3.6
 
-snakemake \
+snakemake -k \
   -s ~/codes/scRNAseq_Benchmark/Snakemake/Snakefile \
   --configfile config.yml \
   --use-singularity \
