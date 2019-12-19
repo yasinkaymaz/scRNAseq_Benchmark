@@ -1,0 +1,6 @@
+name: R3.3
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+prefix: /n/home13/yasinkaymaz/miniconda3/envs/R3.3
