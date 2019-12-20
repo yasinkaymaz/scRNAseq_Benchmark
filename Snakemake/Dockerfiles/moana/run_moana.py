@@ -75,10 +75,16 @@ def run_moana(DataPath, LabelsPath, ClassifierPath, OutputDir, GeneOrderPath = "
 
     os.chdir(OutputDir)
 
-    truelab.to_csv("Moana_true.csv", index = False)
-    pred.to_csv("Moana_pred.csv", index = False)
-    with open("Moana_total_time.csv", 'w') as f:
-        f.write("%f\n" % runtime)
+    if (NumGenes == 0):
+        truelab.to_csv("moana_True_Labels.csv", index = False)
+        pred.to_csv("moana_Pred_Labels.csv", index = False)
+        with open("moana_Total_Time.csv", 'w') as f:
+            f.write("%f\n" % runtime)
+    else:
+        truelab.to_csv("moana_" + str(NumGenes) + "_True_Labels.csv", index = False)
+        pred.to_csv("moana_" + str(NumGenes) + "_Pred_Labels.csv", index = False)
+        with open("moana_" + str(NumGenes) + "_Total_Time.csv", 'w') as f:
+            f.write("%f\n" % runtime)
 
 
 if sys.argv[6] == "0":

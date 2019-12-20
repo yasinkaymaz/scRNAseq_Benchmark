@@ -391,8 +391,35 @@ rule Garnett_Pretrained: #TODO test this
 
 
 """
-Rules for python based tools.
+Rules for python based tools.##################################################
 """
+rule Moana: #TODO test this
+  input:
+    datafile = config["datafile"],
+    labfile = config["labfile"],
+    folds = "{output_dir}/CV_folds.RData",
+    ranking = feature_ranking,
+    classifier = config.get("Moana", {}).get(
+        "classifier", "UNSPECIFIEDFILE")
+  output:
+    pred = "{output_dir}/Moana/Moana_pred.csv",
+    true = "{output_dir}/Moana/Moana_true.csv",
+    total_time = "{output_dir}/Moana/Moana_total_time.csv"
+  log: "{output_dir}/Moana/Moana.log"
+  params:
+    n_features = config.get("number_of_features", 0)
+  singularity: "docker://yasinkaymaz/moana:{}".format('d0.01')
+  shell:
+    "Rscript Scripts/run_moana.py "
+    "{input.datafile} "
+    "{input.labfile} "
+    "{input.classifier} "
+    "{wildcards.output_dir}/Moana "
+    "{input.ranking}"
+    "{params.n_features} "
+    "&> {log}"
+
+
 rule kNN50:
   input:
     datafile = config["datafile"],
