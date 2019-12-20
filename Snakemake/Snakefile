@@ -410,7 +410,7 @@ rule Moana: #TODO test this
     n_features = config.get("number_of_features", 0)
   singularity: "docker://yasinkaymaz/moana:{}".format('d0.01')
   shell:
-    "Rscript Scripts/run_moana.py "
+    "python3 Scripts/run_moana.py "
     "{input.datafile} "
     "{input.labfile} "
     "{input.classifier} "
