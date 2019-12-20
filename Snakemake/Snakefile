@@ -415,7 +415,7 @@ rule Moana: #TODO test this
     "{input.labfile} "
     "{input.classifier} "
     "{wildcards.output_dir}/Moana "
-    "{input.ranking}"
+    "{input.ranking} "
     "{params.n_features} "
     "&> {log}"
 
