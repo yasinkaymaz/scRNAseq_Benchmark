@@ -32,8 +32,6 @@ snakemake -k \
   # - HieRFIT
   # - CHETAH
   # - SingleR
-  # - scVI
-  # - scmapcell
   # - scID
   # - scmapcluster
   # - scmapcell
