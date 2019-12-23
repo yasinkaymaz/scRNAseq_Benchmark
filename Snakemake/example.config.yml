@@ -4,6 +4,28 @@ labfile: input/Labels.csv
 column: 1
 number_of_features: 0
 tools_to_run:
+  - ACTINN
+  - CaSTLe
   - Cell_BLAST
+  - CHETAH
+  - Garnett_CV
+  - Garnett_Pretrained
+  - HieRFIT
+  - kNN50
+  - kNN9
+  - LAmbDA
+  - LDA
+  - LDA_rejection
+  - Moana
+  - NMC
+  - RF
+  - scID
+  - scmapcell
+  - scmapcluster
+  - scPred
   - scVI
-  - scmapcell 
+  - Seurat
+  - singleCellNet
+  - SingleR
+  - SVM
+  - SVM_rejection
