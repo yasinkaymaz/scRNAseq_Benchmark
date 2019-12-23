@@ -19,4 +19,4 @@ sbatch -p holy-info \
 --job-name=BM_"$SAMPLE_NAME" \
 -e err_"$SAMPLE_NAME".%j.txt \
 -o out_"$SAMPLE_NAME".%j.txt \
-Scripts/Run_SnakeMake.sh $cores
+bash Scripts/Run_SnakeMake.sh $cores
