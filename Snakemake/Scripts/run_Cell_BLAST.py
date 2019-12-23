@@ -13,7 +13,7 @@ import Cell_BLAST as cb
 import numpy as np
 from numpy import genfromtxt as gft
 import rpy2.robjects as robjects
-
+cb.config.N_JOBS = 4
 
 def run_Cell_BLAST(DataPath, LabelsPath, CV_RDataPath, OutputDir, GeneOrderPath = "", NumGenes = 0):
     '''
