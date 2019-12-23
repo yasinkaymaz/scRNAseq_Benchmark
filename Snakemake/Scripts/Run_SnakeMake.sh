@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SnakeFile=$1#~/codes/scRNAseq_Benchmark/Snakemake/Snakefile
+SnakeFile=$1
 
 cores=12
 . /n/home13/yasinkaymaz/miniconda3/etc/profile.d/conda.sh
