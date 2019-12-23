@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 cores=$1
 
 . /n/home13/yasinkaymaz/miniconda3/etc/profile.d/conda.sh
