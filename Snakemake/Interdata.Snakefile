@@ -389,6 +389,30 @@ rule Garnett_Pretrained: #TODO test this
     "{params.human} "
     "&> {log}"
 
+rule scClassify:
+  input:
+    datafile = config["datafile"],
+    labfile = config["labfile"],
+    folds = config["FoldData"],
+    ranking = feature_ranking
+  output:
+    pred = "{output_dir}/scClassify/scClassify_pred.csv",
+    true = "{output_dir}/scClassify/scClassify_true.csv",
+    total_time = "{output_dir}/scClassify/scClassify_total_time.csv"
+  log: "{output_dir}/scClassify/scClassify.log"
+  params:
+    n_features = config.get("number_of_features", 0)
+  singularity: "docker://yasinkaymaz/scclassify:{}".format("d0.01")
+  shell:
+    "Rscript Scripts/run_scClassify.R "
+    "{input.datafile} "
+    "{input.labfile} "
+    "{input.folds} "
+    "{wildcards.output_dir}/scClassify "
+    "{input.ranking} "
+    "{params.n_features} "
+    "&> {log}"
+
 
 """
 Rules for python based tools.##################################################
