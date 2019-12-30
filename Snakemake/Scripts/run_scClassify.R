@@ -57,7 +57,7 @@ run_scClassify<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPat
                     verbose = FALSE)
     end_time <- Sys.time()
 
-    Total_Time_scClassify[i] <- as.numeric(difftime(end_traintime,start_traintime,units = 'secs'))
+    Total_Time_scClassify[i] <- as.numeric(difftime(end_time,start_time,units = 'secs'))
     True_Labels_scClassify[i] <- list(Labels[Test_Idx[[i]]])
     Pred_Labels_scClassify[i] <- list(as.vector(scClassify_res$testRes$test$pearson_WKNN_limma$predRes))
   }
