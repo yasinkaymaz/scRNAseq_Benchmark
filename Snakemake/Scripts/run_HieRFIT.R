@@ -39,6 +39,9 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
   Test_Time_HieRFIT <- list()
   Data = t(as.matrix(Data))
 
+  exp <- apply(Data, 2, function(x) (x/sum(x))*10000)
+  Data <- log1p(exp)
+  
   for (i in c(1:n_folds)){
 
 
