@@ -57,7 +57,7 @@ evaluate <- function(TrueLabelsPath, PredLabelsPath, Indices = NULL){
 
   pred_lab = gsub('Node..','Node',pred_lab)
 
-  conf_F1 <- table(true_lab,pred_lab,exclude = c('unassigned','Unassigned','Unknown','rand','Node','ambiguous','unknown'))
+  conf_F1 <- table(true_lab,pred_lab,exclude = c('Undetermined','unassigned','Unassigned','Unknown','rand','Node','Int.Node','ambiguous','unknown'))
 
   F1 <- vector()
   sum_acc <- 0
@@ -86,7 +86,7 @@ evaluate <- function(TrueLabelsPath, PredLabelsPath, Indices = NULL){
   mean_F1 <- mean(F1)
 
   total <- length(pred_lab)
-  num_unlab <- sum(pred_lab == 'unassigned') + sum(pred_lab == 'Unassigned') + sum(pred_lab == 'rand') + sum(pred_lab == 'Unknown') + sum(pred_lab == 'unknown') + sum(pred_lab == 'Node') + sum(pred_lab == 'ambiguous')
+  num_unlab <- sum(pred_lab == 'Undetermined') + sum(pred_lab == 'unassigned') + sum(pred_lab == 'Unassigned') + sum(pred_lab == 'rand') + sum(pred_lab == 'Unknown') + sum(pred_lab == 'unknown') + sum(pred_lab == 'Node') + sum(pred_lab == 'Int.Node') + sum(pred_lab == 'ambiguous')
   per_unlab <- num_unlab / total
 
   acc <- sum_acc/sum(conf_F1)

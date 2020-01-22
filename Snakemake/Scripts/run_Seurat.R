@@ -30,7 +30,7 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
   }
 
   #Function for Seurat Anchor prediction
-  SeuratAnchorPredict <- function(ref, query){
+  SeuratAnchorPredict <- function(refSeu, queSeu){
     transfer.anchors <- FindTransferAnchors(reference = refSeu, query = queSeu, features = VariableFeatures(object = refSeu),
                                           reference.assay = "RNA", query.assay = "RNA", reduction = "pcaproject")
                                           celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = refSeu$CellType, dims = 1:30)
@@ -56,10 +56,18 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
 
         refdata <- Data[as.vector(GenesOrder[c(1:NumGenes),i])+1,Train_Idx[[i]]]
         refSeu <- CreateSeuratObject(counts = refdata)
+        refSeu <- NormalizeData(refSeu)
+        refSeu <- FindVariableFeatures(refSeu)
+        refSeu <- ScaleData(refSeu, features = VariableFeatures(refSeu))
+        refSeu <- RunPCA(refSeu)
         refSeu@meta.data$CellType <- Labels[Train_Idx[[i]]]
 
         quedata <- Data[as.vector(GenesOrder[c(1:NumGenes),i])+1,Test_Idx[[i]]]
         queSeu <- CreateSeuratObject(counts = quedata)
+        queSeu <- NormalizeData(queSeu)
+        queSeu <- FindVariableFeatures(queSeu)
+        queSeu <- ScaleData(queSeu, features = VariableFeatures(queSeu))
+        queSeu <- RunPCA(queSeu)
         queSeu@meta.data$CellType <- Labels[Test_Idx[[i]]]
 
         refSeu <- UpdateSeuratObject(object = refSeu)
@@ -74,10 +82,18 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
 
         refdata <- Data[,Train_Idx[[i]]]
         refSeu <- CreateSeuratObject(counts = refdata)
+        refSeu <- NormalizeData(refSeu)
+        refSeu <- FindVariableFeatures(refSeu)
+        refSeu <- ScaleData(refSeu, features = VariableFeatures(refSeu))
+        refSeu <- RunPCA(refSeu)
         refSeu@meta.data$CellType <- Labels[Train_Idx[[i]]]
 
         quedata <- Data[,Test_Idx[[i]]]
         queSeu <- CreateSeuratObject(counts = quedata)
+        queSeu <- NormalizeData(queSeu)
+        queSeu <- FindVariableFeatures(queSeu)
+        queSeu <- ScaleData(queSeu, features = VariableFeatures(queSeu))
+        queSeu <- RunPCA(queSeu)
         queSeu@meta.data$CellType <- Labels[Test_Idx[[i]]]
 
         refSeu <- UpdateSeuratObject(object = refSeu)
