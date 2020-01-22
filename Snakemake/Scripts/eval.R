@@ -19,7 +19,7 @@ evaluate <- function(TrueLabelsPath, PredLabelsPath, Indices = NULL){
   Script to evaluate the performance of the classifier.
   It returns multiple evaluation measures: the confusion matrix, median F1-score, F1-score for each class, accuracy, percentage of unlabeled, population size.
 
-  The percentage of unlabeled cells is find by checking for cells that are labeled 'Unassigned', 'unassigned', 'Unknown', 'unknown', 'Nodexx', 'rand', or 'ambiguous'.
+  The percentage of unlabeled cells is find by checking for cells that are labeled 'Unassigned', 'unassigned', 'Unknown', 'unknown', 'Node', 'rand', or 'ambiguous'.
 
   Parameters
   ----------

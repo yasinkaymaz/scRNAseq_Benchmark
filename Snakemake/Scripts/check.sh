@@ -34,7 +34,6 @@ do
 
 done
 
-
 for i in `cat datasets.txt`;
 do
   datafile=`grep datafile $i/config.yml|cut -d " " -f2`;
@@ -42,7 +41,7 @@ do
   col=`grep column $i/config.yml|cut -d " " -f2`;
   Comp=`Rscript complex.R $datafile $labelfile $col`;
   echo -e "$i\t$Comp ";
-done >> dataComplexities.txt
+done >> dataComplexities_UQ.txt
 
 for d in `cat datasets.txt`;
 do
@@ -96,4 +95,12 @@ do
 
     done
 
+  done
+
+
+  for i in `cat datasets.txt`;
+  do
+    echo $i;
+    datafile=`grep datafile $i/config.yml|cut -d " " -f2`;
+    sed '1d' $datafile |cut -d, -f1-10|head -1;
   done

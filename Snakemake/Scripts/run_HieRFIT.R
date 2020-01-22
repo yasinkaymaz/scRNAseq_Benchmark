@@ -41,7 +41,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
 
   exp <- apply(Data, 2, function(x) (x/sum(x))*10000)
   Data <- log1p(exp)
-  
+
   for (i in c(1:n_folds)){
 
 
@@ -64,7 +64,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
          SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
       #Projection with HieRFIT
       start_testtime <- Sys.time()
-      HierObj <- HieRFIT(Query = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Test_Idx[[i]]], refMod = HieRMod, alpha = 0)
+      HierObj <- HieRFIT(Query = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Test_Idx[[i]]], refMod = HieRMod)
       end_testtime <- Sys.time()
       gc()
 
@@ -88,7 +88,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
          SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
       #Projection with HieRFIT
       start_testtime <- Sys.time()
-      HierObj <- HieRFIT(Query = Data[, Test_Idx[[i]]], refMod = HieRMod, alpha = 0)
+      HierObj <- HieRFIT(Query = Data[, Test_Idx[[i]]], refMod = HieRMod)
       end_testtime <- Sys.time()
     }
 
