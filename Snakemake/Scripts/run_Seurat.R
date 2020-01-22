@@ -70,11 +70,10 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
         queSeu <- RunPCA(queSeu)
         queSeu@meta.data$CellType <- Labels[Test_Idx[[i]]]
 
-        refSeu <- UpdateSeuratObject(object = refSeu)
-        refSeu <- FindVariableFeatures(refSeu, selection.method = "vst", nfeatures = 2000)
-
-        celltype.predictions <- SeuratAnchorPredict(ref=refSeu, query = queSeu)
-
+        #celltype.predictions <- SeuratAnchorPredict(ref=refSeu, query = queSeu)
+        transfer.anchors <- FindTransferAnchors(reference = refSeu, query = queSeu, features = VariableFeatures(object = refSeu),
+                                              reference.assay = "RNA", query.assay = "RNA", reduction = "pcaproject")
+        celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = refSeu$CellType, dims = 1:30)
         end_time <- Sys.time()
       }
       else{
@@ -96,11 +95,10 @@ run_Seurat<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath = 
         queSeu <- RunPCA(queSeu)
         queSeu@meta.data$CellType <- Labels[Test_Idx[[i]]]
 
-        refSeu <- UpdateSeuratObject(object = refSeu)
-        refSeu <- FindVariableFeatures(refSeu, selection.method = "vst", nfeatures = 2000)
-
-        tryCatch(celltype.predictions <- SeuratAnchorPredict(ref=refSeu, query = queSeu), error = function(e){print("Finding anchors fails ..."); NaN})
-
+        #tryCatch(celltype.predictions <- SeuratAnchorPredict(ref=refSeu, query = queSeu), error = function(e){print("Finding anchors fails ..."); NaN})
+        transfer.anchors <- FindTransferAnchors(reference = refSeu, query = queSeu, features = VariableFeatures(object = refSeu),
+                                              reference.assay = "RNA", query.assay = "RNA", reduction = "pcaproject")
+        celltype.predictions <- TransferData(anchorset = transfer.anchors, refdata = refSeu$CellType, dims = 1:30)
         end_time <- Sys.time()
       }
       Total_Time_Seurat[i] <- as.numeric(difftime(end_time,start_time,units = 'secs'))

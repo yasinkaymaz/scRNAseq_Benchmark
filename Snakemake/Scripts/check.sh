@@ -72,8 +72,8 @@ do
 
 
 
-#For collecting results from Inter-dataset tests:
-  for m in MedF1 PercUnl;
+#For collecting results from Inter-dataset tests:MedF1 PercUnl
+  for m in MedF1 PercUnl Acc;
   do
 
     for d in `cat datasets.txt`;
@@ -82,12 +82,13 @@ do
 
       for i in `cat tools.txt`;
       do
+        if [ $i == "HieRFIT" ]; then dir="./"; else dir="../";fi
         echo $i > tmp.txt;
         for s in `cut -f1 "$d"/indices.txt`;
         do
           start=`grep $s "$d"/indices.txt|cut -f2`;
           end=`grep $s "$d"/indices.txt|cut -f3`;
-          if [ -f $d/BMoutput/$i/"$i"_pred.csv ]; then Rscript rfile.R $d/BMoutput/$i/"$i"_true.csv $d/BMoutput/$i/"$i"_pred.csv $m $start $end; else echo "NA"; fi
+          if [ -f $dir/$d/BMoutput/$i/"$i"_pred.csv ]; then Rscript rfile.R $dir/$d/BMoutput/$i/"$i"_true.csv $dir/$d/BMoutput/$i/"$i"_pred.csv $m $start $end; else echo "NA"; fi
         done >> tmp.txt
         paste -d "\t" "$d"_"$m"_table.txt tmp.txt > table2.txt;
         rm "$d"_"$m"_table.txt tmp.txt && mv table2.txt "$d"_"$m"_table.txt;
