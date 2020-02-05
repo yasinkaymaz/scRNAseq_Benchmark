@@ -64,6 +64,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
         SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
       }else{
         HieRMod <- LoadHieRMod(fileName = hiermodFile)
+        end_traintime <- Sys.time()
       }
       #Projection with HieRFIT
       start_testtime <- Sys.time()
@@ -91,6 +92,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
         SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
       }else{
         HieRMod <- LoadHieRMod(fileName = hiermodFile)
+        end_traintime <- Sys.time()
       }
       #Projection with HieRFIT
       start_testtime <- Sys.time()
