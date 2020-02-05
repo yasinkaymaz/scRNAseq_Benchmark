@@ -44,7 +44,6 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
 
   for (i in c(1:n_folds)){
 
-
     if(!is.null(GeneOrderPath) & !is.null (NumGenes)){
       start_traintime <- Sys.time()
       #Here Create HierMod:
@@ -56,20 +55,23 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
         treetable <- read.delim(TreeTable, header=F)
         threadN <- CreateTree(treeTable=treetable)$Nnode
       }
-
-         HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],
+      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = "")
+      if(!file.exists(hiermodFile)){
+        HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
                               TreeTable = treetable, thread = threadN)
-      end_traintime <- Sys.time()
-         SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
+        end_traintime <- Sys.time()
+        SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
+      }else{
+        HieRMod <- LoadHieRMod(fileName = hiermodFile)
+      }
       #Projection with HieRFIT
       start_testtime <- Sys.time()
       HierObj <- HieRFIT(Query = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Test_Idx[[i]]], refMod = HieRMod)
       end_testtime <- Sys.time()
       gc()
 
-    }
-    else{
+    }else{
       start_traintime <- Sys.time()
       #Here Create HierMod:
       if(!file.exists(TreeTable)){
@@ -80,12 +82,16 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
         treetable <- read.delim(TreeTable, header=F)
         threadN <- CreateTree(treeTable=treetable)$Nnode
       }
-
-         HieRMod <- CreateHieR(RefData = Data[, Train_Idx[[i]]],
+      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = "")
+      if(!file.exists(hiermodFile)){
+        HieRMod <- CreateHieR(RefData = Data[, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
                               TreeTable = treetable, thread = threadN)
-      end_traintime <- Sys.time()
-         SaveHieRMod(refMod = HieRMod, fileName = paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = ""))
+        end_traintime <- Sys.time()
+        SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
+      }else{
+        HieRMod <- LoadHieRMod(fileName = hiermodFile)
+      }
       #Projection with HieRFIT
       start_testtime <- Sys.time()
       HierObj <- HieRFIT(Query = Data[, Test_Idx[[i]]], refMod = HieRMod)

@@ -3,7 +3,7 @@ args <- commandArgs(TRUE)
 TrueLabelsPath <- args[1]
 PredLabelsPath <- args[2]
 Output <- args[3] # MedF1 Acc PercUnl
-
+HierModPath <- args[4]
 #' A function to fix class labels.
 #' @param xstring is a list of class labels in character.
 FixLab <- function(xstring){
@@ -47,6 +47,12 @@ evaluate <- function(TrueLabelsPath, PredLabelsPath, Indices = NULL){
     true_lab <- true_lab[Indices]
     pred_lab <- pred_lab[Indices]
   }
+
+  if(!is.null(HierModPath)){
+    suppressPackageStartupMessages(library(HieRFIT))
+    refmod <- LoadHieRMod(fileName=HierModPath)
+    hPRFtab <- hPRF(tpT = as.data.frame(cbind(true_lab, pred_lab)), tree = refmod@tree[[1]])
+  }else{hPRFtab <- NULL}
 
   unique_true <- unlist(unique(true_lab))
   unique_pred <- unlist(unique(pred_lab))
@@ -105,9 +111,13 @@ evaluate <- function(TrueLabelsPath, PredLabelsPath, Indices = NULL){
                 sum(pred_lab == 'ambiguous')
   per_unlab <- num_unlab / total
 
+  num_Interlab <- sum(pred_lab == 'Node') +
+                sum(pred_lab == 'Int.Node')
+  per_Interlab <- num_Interlab / total
+
   acc <- sum_acc/sum(conf_F1)
 
-  result <- list(Conf = conf, MeanF1=mean_F1, MedF1 = med_F1, F1 = F1, Acc = acc, PercUnl = per_unlab, PopSize = pop_size)
+  result <- list(Conf = conf, MeanF1=mean_F1, MedF1 = med_F1, F1 = F1, Acc = acc, PercInter= per_Interlab, PercUnl = per_unlab, PopSize = pop_size, hPRF=hPRFtab)
 
   return(result)
 }
