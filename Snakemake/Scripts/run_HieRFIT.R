@@ -55,7 +55,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
         treetable <- read.delim(TreeTable, header=F)
         threadN <- CreateTree(treeTable=treetable)$Nnode
       }
-      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = "")
+      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata.RDS", sep = "")
       if(!file.exists(hiermodFile)){
         HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
@@ -82,7 +82,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
         treetable <- read.delim(TreeTable, header=F)
         threadN <- CreateTree(treeTable=treetable)$Nnode
       }
-      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata", sep = "")
+      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata.RDS", sep = "")
       if(!file.exists(hiermodFile)){
         HieRMod <- CreateHieR(RefData = Data[, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
