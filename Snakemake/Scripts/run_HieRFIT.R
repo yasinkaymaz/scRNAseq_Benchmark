@@ -63,9 +63,9 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
                               thread = threadN,
                               species = "mmusculus")
         end_traintime <- Sys.time()
-        SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
+        SaveHieRMod(refMod = HieRMod, filePrefix = hiermodFile)
       }else{
-        HieRMod <- LoadHieRMod(fileName = hiermodFile)
+        HieRMod <- readRDS(hiermodFile)
         end_traintime <- Sys.time()
       }
       #Projection with HieRFIT
@@ -93,9 +93,9 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
                               thread = threadN,
                               species = "mmusculus")
         end_traintime <- Sys.time()
-        SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
+        SaveHieRMod(refMod = HieRMod, filePrefix = hiermodFile)
       }else{
-        HieRMod <- LoadHieRMod(fileName = hiermodFile)
+        HieRMod <- readRDS(hiermodFile)
         end_traintime <- Sys.time()
       }
       #Projection with HieRFIT
