@@ -59,7 +59,9 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
       if(!file.exists(hiermodFile)){
         HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
-                              TreeTable = treetable, thread = threadN)
+                              Tree = treetable,
+                              thread = threadN,
+                              species = "mmusculus")
         end_traintime <- Sys.time()
         SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
       }else{
@@ -87,7 +89,9 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
       if(!file.exists(hiermodFile)){
         HieRMod <- CreateHieR(RefData = Data[, Train_Idx[[i]]],
                               ClassLabels = Labels[Train_Idx[[i]]],
-                              TreeTable = treetable, thread = threadN)
+                              Tree = treetable,
+                              thread = threadN,
+                              species = "mmusculus")
         end_traintime <- Sys.time()
         SaveHieRMod(refMod = HieRMod, fileName = hiermodFile)
       }else{
