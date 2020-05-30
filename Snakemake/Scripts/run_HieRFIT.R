@@ -55,7 +55,7 @@ run_HieRFIT<-function(DataPath,LabelsPath,CV_RDataPath,OutputDir,GeneOrderPath =
         treetable <- read.delim(TreeTable, header=F)
         threadN <- CreateTree(treeTable=treetable)$Nnode
       }
-      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata.RDS", sep = "")
+      hiermodFile=paste(OutputDir, "/", i, "_HieRMod.Rdata.RDS.RDS", sep = "")
       if(!file.exists(hiermodFile)){
         if(threadN > 24){threadN <- 24}
         HieRMod <- CreateHieR(RefData = Data[as.vector(GenesOrder[c(1:NumGenes), i])+1, Train_Idx[[i]]],

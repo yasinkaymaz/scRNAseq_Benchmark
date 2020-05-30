@@ -14,7 +14,7 @@ FixLab <- function(xstring){
   return(xstring)
 }
 
-evaluate <- function(TrueLabelsPath, PredLabelsPath, Indices = NULL){
+evaluate <- function(TrueLabelsPath, PredLabelsPath, HierModPath=NULL, Indices = NULL){
   "
   Script to evaluate the performance of the classifier.
   It returns multiple evaluation measures: the confusion matrix, median F1-score, F1-score for each class, accuracy, percentage of unlabeled, population size.
@@ -50,7 +50,7 @@ evaluate <- function(TrueLabelsPath, PredLabelsPath, Indices = NULL){
 
   if(!is.null(HierModPath)){
     suppressPackageStartupMessages(library(HieRFIT))
-    refmod <- LoadHieRMod(fileName=HierModPath)
+    refmod <- readRDS(HierModPath)
     hPRFtab <- hPRF(tpT = as.data.frame(cbind(true_lab, pred_lab)), tree = refmod@tree[[1]])
   }else{hPRFtab <- NULL}
 
